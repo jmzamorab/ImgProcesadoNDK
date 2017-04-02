@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_convertirGrises
   (JNIEnv *, jobject, jobject, jobject);
 
+/*
+ * Class:     com_imgprocesadondk_ImgProcesadoNDK
+ * Method:    convertirSepia
+ * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
+ */
+JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_convertirSepia
+  (JNIEnv *, jobject, jobject, jobject);
+
 #ifdef __cplusplus
 }
 #endif
