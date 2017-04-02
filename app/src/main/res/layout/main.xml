@@ -14,25 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
         <Button
-            android:id="@+id/btnReset"
+            android:id="@+id/btnTakePhoto"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Original"
-            android:onClick="onResetImagen" />
-        <Button
-            android:id="@+id/btnConvert"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Grises"
-            android:onClick="onConvertirGrises" />
-        <Button
-            android:id="@+id/btnSepia"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sepia"
-            android:onClick="onConvertirSepia" />
+            android:layout_gravity="center_horizontal|bottom"
+            android:text="Hacer Foto"
+            android:onClick="onTakePhoto" />
     </LinearLayout>
 </LinearLayout>

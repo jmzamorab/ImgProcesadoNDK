@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/ tools"
+    tools:context=".ImgProcesadoNDK">
+
+    <item
+        android:id="@+id/action_reset"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="100"
+        android:title="Mostrar Original"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/color"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="200"
+        android:title="Color"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/gray"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="300"
+        android:title="Grises"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/sepia"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="400"
+        android:title="Sepia"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/galery"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="400"
+        android:title="Seleccionar foto de la galeria"
+        app:showAsAction="never" />
+</menu>
