@@ -14,7 +14,6 @@ typedef struct {
 } rgba; /*Conversion a grises por pixel*/
 
 JNIEXPORT void JNICALL
-
 Java_com_imgprocesadondk_ImgProcesadoNDK_convertirGrises(JNIEnv *env, jobject obj,
                                                          jobject bitmapcolor, jobject bitmapgris) {
     AndroidBitmapInfo infocolor;
@@ -70,7 +69,6 @@ Java_com_imgprocesadondk_ImgProcesadoNDK_convertirGrises(JNIEnv *env, jobject ob
 }
 
 JNIEXPORT void JNICALL
-
  Java_com_imgprocesadondk_ImgProcesadoNDK_convertirSepia (JNIEnv *env, jobject obj, jobject bitmapcolor, jobject bitmapsepia){
     AndroidBitmapInfo infocolor;
     void *pixelscolor;
@@ -145,5 +143,75 @@ JNIEXPORT void JNICALL
     AndroidBitmap_unlockPixels(env, bitmapsepia);
 }
 
+JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_creaMarco
+        (JNIEnv *env, jobject obj, jobject bitmapcolor, jobject bitmapmarco)
+{
+    AndroidBitmapInfo infocolor;
+    void *pixelscolor;
+    AndroidBitmapInfo infomarco;
+    void *pixelsmarco;
+    int ret;
+    int y;
+    int x;
+    int limitalto;
+    int limitdcha;
 
+    LOGI("convertirMarco");
+    if ((ret = AndroidBitmap_getInfo(env, bitmapcolor, &infocolor)) < 0) {
+        LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return;
+    }
+    if ((ret = AndroidBitmap_getInfo(env, bitmapmarco, &infomarco)) < 0) {
+        LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return;
+    }
+    LOGI("imagen color :: ancho %d;alto %d;avance %d;formato %d;flags %d", infocolor.width,
+         infocolor.height, infocolor.stride, infocolor.format, infocolor.flags);
+    if (infocolor.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap no es formato RGBA_8888 !");
+        return;
+    }
+
+    LOGI("imagen color :: ancho %d;alto %d;avance %d;formato %d;flags %d", infomarco.width,
+         infomarco.height, infomarco.stride, infomarco.format, infomarco.flags);
+    if (infomarco.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap no es formato RGBA_8888 !");
+        return;
+    }
+    if ((ret = AndroidBitmap_lockPixels(env, bitmapcolor, &pixelscolor)) < 0) {
+        LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
+    }
+    if ((ret = AndroidBitmap_lockPixels(env, bitmapmarco, &pixelsmarco)) < 0) {
+        LOGE("AndroidBitmap_lockPixels() fallo ! error=%d", ret);
+    } // modificacion pixeles en el algoritmo de escala grises
+
+    limitdcha = infocolor.width - 10;
+    limitalto = infocolor.height -10;
+    for (y = 0; y < infocolor.height; y++) {
+        rgba *line = (rgba *) pixelscolor;
+        rgba *marcoline = (rgba *) pixelsmarco;
+        for (x = 0; x < infocolor.width; x++) {
+            if(y <= 9 || y >= limitalto )
+            {
+                marcoline[x].red = marcoline[x].green = marcoline[x].blue = (uint8_t) 0;
+            }
+            else if (x <= 9 || x >= limitdcha )
+            {
+                marcoline[x].red = marcoline[x].green = marcoline[x].blue = (uint8_t) 0;
+            }
+            else{
+                marcoline[x].red = line[x].red;
+                marcoline[x].green = line[x].green;
+                marcoline[x].blue = line[x].blue;
+            }
+
+            marcoline[x].alpha = line[x].alpha;
+        }
+        pixelscolor = (char *) pixelscolor + infocolor.stride;
+        pixelsmarco = (char *) pixelsmarco + infomarco.stride;
+    }
+    LOGI("unlocking pixels");
+    AndroidBitmap_unlockPixels(env, bitmapcolor);
+    AndroidBitmap_unlockPixels(env, bitmapmarco);
+}
 

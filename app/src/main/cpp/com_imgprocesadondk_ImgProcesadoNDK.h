@@ -23,6 +23,14 @@ JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_convertirGrises
 JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_convertirSepia
   (JNIEnv *, jobject, jobject, jobject);
 
+/*
+ * Class:     com_imgprocesadondk_ImgProcesadoNDK
+ * Method:    creaMarco
+ * Signature: (Landroid/graphics/Bitmap;Landroid/graphics/Bitmap;)V
+ */
+JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_creaMarco
+  (JNIEnv *, jobject, jobject, jobject);
+
 #ifdef __cplusplus
 }
 #endif

@@ -33,6 +33,7 @@ public class ImgProcesadoNDK extends AppCompatActivity {
     private Bitmap bitmapOriginal = null;
     private Bitmap bitmapGrises = null;
     private Bitmap bitmapSepia = null;
+    private Bitmap bitmapMarco_1 = null;
     private ImageView ivDisplay = null;
     // Propuesta Doc Oficial
     private String mCurrentPhotoPath;
@@ -49,6 +50,7 @@ public class ImgProcesadoNDK extends AppCompatActivity {
     // funciones de Código nativo
     public native void convertirGrises(Bitmap bitmapIn, Bitmap bitmapOut);
     public native void convertirSepia(Bitmap bitmapIn, Bitmap bitmapOut);
+    public native void creaMarco(Bitmap bitmapIn, Bitmap bitmapOut);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,12 @@ public class ImgProcesadoNDK extends AppCompatActivity {
                 convertirSepia(bitmapOriginal, bitmapSepia);
                 ivDisplay.setImageBitmap(bitmapSepia);
             break;
+            case R.id.marco_1:
+                Log.i(tag, "Conversion a escala a Sepia");
+                bitmapMarco_1 = Bitmap.createBitmap(bitmapOriginal.getWidth(), bitmapOriginal.getHeight(), Bitmap.Config.ARGB_8888);
+                creaMarco(bitmapOriginal, bitmapMarco_1);
+                ivDisplay.setImageBitmap(bitmapMarco_1);
+                break;
             case R.id.galery:
               Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
               int code = SELECT_PICTURE;
