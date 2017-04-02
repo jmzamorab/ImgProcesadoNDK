@@ -27,6 +27,7 @@ import java.util.Date;
 
 import static android.R.attr.data;
 import static android.R.attr.width;
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class ImgProcesadoNDK extends AppCompatActivity {
     private String tag = "ImgProcesadoNDK";
@@ -35,6 +36,8 @@ public class ImgProcesadoNDK extends AppCompatActivity {
     private Bitmap bitmapSepia = null;
     private Bitmap bitmapMarco_1 = null;
     private ImageView ivDisplay = null;
+    private MenuItem mnuItem;
+    private Menu mnu;
     // Propuesta Doc Oficial
     private String mCurrentPhotoPath;
     // doc Internet
@@ -51,8 +54,15 @@ public class ImgProcesadoNDK extends AppCompatActivity {
     public native void convertirGrises(Bitmap bitmapIn, Bitmap bitmapOut);
     public native void convertirSepia(Bitmap bitmapIn, Bitmap bitmapOut);
     public native void creaMarco(Bitmap bitmapIn, Bitmap bitmapOut);
+   // public native boolean callback();
+    public native void creaMarcoCallBack(Bitmap bitmapIn, Bitmap bitmapOut);
 
-    @Override
+    public static boolean hayPixel(int x, int y) {
+       // Log.d(" *** hayPixel()", " Invocado con x => " + x + " y => " + y + " x%10 == y%10 => " + (x%10 == y%10));
+        return x%10 == y%10;
+    }
+
+     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -101,9 +111,17 @@ public class ImgProcesadoNDK extends AppCompatActivity {
                 ivDisplay.setImageBitmap(bitmapSepia);
             break;
             case R.id.marco_1:
-                Log.i(tag, "Conversion a escala a Sepia");
+                Log.i(tag, "Creacion de Marco_1");
+                //item.getMenuInfo().
+                //mnuItem = menu.findItem(R.id.marco_2).setEnabled(true);
                 bitmapMarco_1 = Bitmap.createBitmap(bitmapOriginal.getWidth(), bitmapOriginal.getHeight(), Bitmap.Config.ARGB_8888);
                 creaMarco(bitmapOriginal, bitmapMarco_1);
+                ivDisplay.setImageBitmap(bitmapMarco_1);
+                break;
+            case R.id.marco_2:
+                Log.i(tag, "Creacion de Marco_2");
+                bitmapMarco_1 = Bitmap.createBitmap(bitmapOriginal.getWidth(), bitmapOriginal.getHeight(), Bitmap.Config.ARGB_8888);
+                creaMarcoCallBack(bitmapOriginal, bitmapMarco_1);
                 ivDisplay.setImageBitmap(bitmapMarco_1);
                 break;
             case R.id.galery:

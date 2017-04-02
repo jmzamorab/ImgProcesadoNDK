@@ -69,7 +69,8 @@ Java_com_imgprocesadondk_ImgProcesadoNDK_convertirGrises(JNIEnv *env, jobject ob
 }
 
 JNIEXPORT void JNICALL
- Java_com_imgprocesadondk_ImgProcesadoNDK_convertirSepia (JNIEnv *env, jobject obj, jobject bitmapcolor, jobject bitmapsepia){
+Java_com_imgprocesadondk_ImgProcesadoNDK_convertirSepia(JNIEnv *env, jobject obj,
+                                                        jobject bitmapcolor, jobject bitmapsepia) {
     AndroidBitmapInfo infocolor;
     void *pixelscolor;
     AndroidBitmapInfo infosepia;
@@ -110,27 +111,27 @@ JNIEXPORT void JNICALL
         rgba *line = (rgba *) pixelscolor;
         rgba *sepialine = (rgba *) pixelssepia;
         for (x = 0; x < infocolor.width; x++) {
-            double redPrueba = (line[x].red *.393) + (line[x].green *.769) + (line[x].blue * .189);
-            double greenPrueba  = (line[x].red * .349) + (line[x].green  *.686) + (line[x].blue * .168);
-            double bluePrueba  = (line[x].red * .272) + (line[x].green  *.534) + (line[x].blue * .131);
+            double redPrueba =
+                    (line[x].red * .393) + (line[x].green * .769) + (line[x].blue * .189);
+            double greenPrueba =
+                    (line[x].red * .349) + (line[x].green * .686) + (line[x].blue * .168);
+            double bluePrueba =
+                    (line[x].red * .272) + (line[x].green * .534) + (line[x].blue * .131);
 
             if (redPrueba > 255) {
                 sepialine[x].red = (uint8_t) 255;
-            }
-            else {
+            } else {
                 sepialine[x].red = (uint8_t) redPrueba;
             }
-            if (greenPrueba > 255){
+            if (greenPrueba > 255) {
                 sepialine[x].green = (uint8_t) 255;
-            }
-            else{
+            } else {
                 sepialine[x].green = (uint8_t) greenPrueba;
             }
 
-            if (bluePrueba>255){
-                sepialine[x].blue =  (uint8_t) 255;
-            }
-            else{
+            if (bluePrueba > 255) {
+                sepialine[x].blue = (uint8_t) 255;
+            } else {
                 sepialine[x].blue = (uint8_t) bluePrueba;
             }
             sepialine[x].alpha = line[x].alpha;
@@ -144,8 +145,7 @@ JNIEXPORT void JNICALL
 }
 
 JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_creaMarco
-        (JNIEnv *env, jobject obj, jobject bitmapcolor, jobject bitmapmarco)
-{
+        (JNIEnv *env, jobject obj, jobject bitmapcolor, jobject bitmapmarco) {
     AndroidBitmapInfo infocolor;
     void *pixelscolor;
     AndroidBitmapInfo infomarco;
@@ -186,20 +186,124 @@ JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_creaMarco
     } // modificacion pixeles en el algoritmo de escala grises
 
     limitdcha = infocolor.width - 10;
-    limitalto = infocolor.height -10;
+    limitalto = infocolor.height - 10;
     for (y = 0; y < infocolor.height; y++) {
         rgba *line = (rgba *) pixelscolor;
         rgba *marcoline = (rgba *) pixelsmarco;
         for (x = 0; x < infocolor.width; x++) {
-            if(y <= 9 || y >= limitalto )
-            {
+            if (y <= 9 || y >= limitalto) {
                 marcoline[x].red = marcoline[x].green = marcoline[x].blue = (uint8_t) 0;
-            }
-            else if (x <= 9 || x >= limitdcha )
-            {
+            } else if (x <= 9 || x >= limitdcha) {
                 marcoline[x].red = marcoline[x].green = marcoline[x].blue = (uint8_t) 0;
+            } else {
+                marcoline[x].red = line[x].red;
+                marcoline[x].green = line[x].green;
+                marcoline[x].blue = line[x].blue;
             }
-            else{
+            marcoline[x].alpha = line[x].alpha;
+        }
+        pixelscolor = (char *) pixelscolor + infocolor.stride;
+        pixelsmarco = (char *) pixelsmarco + infomarco.stride;
+    }
+    LOGI("unlocking pixels");
+    AndroidBitmap_unlockPixels(env, bitmapcolor);
+    AndroidBitmap_unlockPixels(env, bitmapmarco);
+}
+
+
+
+/*JNIEXPORT  jboolean JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_callback
+        (JNIEnv *env , jobject thiz) {
+    // #define JNI_FALSE  0
+    // #define JNI_TRUE   1
+    jboolean prueba = JNI_FALSE;
+    LOGI("haypixel llamada!");
+    jclass clazz = (*env)->GetObjectClass(env, thiz);
+    if (!clazz) {
+        LOGE("callback_handler: FALLO object Class");
+        goto failure;
+    }
+    jmethodID method = (*env)->GetStaticMethodID(env, clazz, "haypixel", "(II)Z");
+    if (!method) {
+        LOGE("callback_hand ler: FALLO metodo ID");
+        goto failure;
+    }
+    prueba = (*env)->CallStaticByteMethod(env, thiz, method);
+    failure:
+    return prueba;
+}*/
+
+
+JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_creaMarcoCallBack
+        (JNIEnv *env, jobject obj, jobject bitmapcolor, jobject bitmapmarco) {
+    jboolean prueba = JNI_FALSE;
+    LOGI("haypixel llamada!");
+    jclass clazz = (*env)->GetObjectClass(env, obj);
+    if (!clazz) {
+        LOGE("callback_handler: FALLO object Class");
+        goto failure;
+    }
+
+    jmethodID method = (*env)->GetStaticMethodID(env, clazz, "hayPixel", "(II)Z");
+    if (!method) {
+        LOGE("callback_hand ler: FALLO metodo ID");
+        goto failure;
+    }
+
+    AndroidBitmapInfo infocolor;
+    void *pixelscolor;
+    AndroidBitmapInfo infomarco;
+    void *pixelsmarco;
+    int ret;
+    int y;
+    int x;
+    int limitalto;
+    int limitdcha;
+    uint8_t color;
+
+    LOGI("convertirMarco");
+    if ((ret = AndroidBitmap_getInfo(env, bitmapcolor, &infocolor)) < 0) {
+        LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return;
+    }
+    if ((ret = AndroidBitmap_getInfo(env, bitmapmarco, &infomarco)) < 0) {
+        LOGE("AndroidBitmap_getInfo() failed ! error=%d", ret);
+        return;
+    }
+    LOGI("imagen color :: ancho %d;alto %d;avance %d;formato %d;flags %d", infocolor.width,
+         infocolor.height, infocolor.stride, infocolor.format, infocolor.flags);
+    if (infocolor.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap no es formato RGBA_8888 !");
+        return;
+    }
+
+    LOGI("imagen color :: ancho %d;alto %d;avance %d;formato %d;flags %d", infomarco.width,
+         infomarco.height, infomarco.stride, infomarco.format, infomarco.flags);
+    if (infomarco.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
+        LOGE("Bitmap no es formato RGBA_8888 !");
+        return;
+    }
+    if ((ret = AndroidBitmap_lockPixels(env, bitmapcolor, &pixelscolor)) < 0) {
+        LOGE("AndroidBitmap_lockPixels() failed ! error=%d", ret);
+    }
+    if ((ret = AndroidBitmap_lockPixels(env, bitmapmarco, &pixelsmarco)) < 0) {
+        LOGE("AndroidBitmap_lockPixels() fallo ! error=%d", ret);
+    } // modificacion pixeles en el algoritmo de escala grises
+
+    limitdcha = infocolor.width - 10;
+    limitalto = infocolor.height - 10;
+    for (y = 0; y < infocolor.height; y++) {
+        rgba *line = (rgba *) pixelscolor;
+        rgba *marcoline = (rgba *) pixelsmarco;
+        for (x = 0; x < infocolor.width; x++) {
+            prueba = (*env)->CallStaticBooleanMethod(env, clazz, method);
+            if (prueba == JNI_TRUE) { color = 0; }
+            else { color = 255; }
+            if (y <= 9 || y >= limitalto) {
+                marcoline[x].red = marcoline[x].green = marcoline[x].blue = color;
+            } else if (x <= 9 || x >= limitdcha) {
+                marcoline[x].red = marcoline[x].green = marcoline[x].blue = color;
+            } else {
                 marcoline[x].red = line[x].red;
                 marcoline[x].green = line[x].green;
                 marcoline[x].blue = line[x].blue;
@@ -213,5 +317,6 @@ JNIEXPORT void JNICALL Java_com_imgprocesadondk_ImgProcesadoNDK_creaMarco
     LOGI("unlocking pixels");
     AndroidBitmap_unlockPixels(env, bitmapcolor);
     AndroidBitmap_unlockPixels(env, bitmapmarco);
+    failure:
+    return;
 }
-

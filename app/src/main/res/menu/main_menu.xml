@@ -40,7 +40,7 @@
         android:orderInCategory="600"
         android:title="Crear Marco 2"
         app:showAsAction="never"
-        android:enabled="false"/>
+        />
     <item
         android:id="@+id/galery"
         android:icon="@android:drawable/ic_menu_preferences"
